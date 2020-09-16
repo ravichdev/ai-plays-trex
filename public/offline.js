@@ -643,12 +643,12 @@ Runner.prototype = {
       switch (evtType) {
         case events.KEYDOWN:
         case events.TOUCHSTART:
-        case events.POINTERDOWN:
+        // case events.POINTERDOWN:
           this.onKeyDown(e);
           break;
         case events.KEYUP:
         case events.TOUCHEND:
-        case events.POINTERUP:
+        // case events.POINTERUP:
           this.onKeyUp(e);
           break;
         case events.GAMEPADCONNECTED:
@@ -967,7 +967,6 @@ Runner.prototype = {
     this.stop();
     this.crashed = true;
     this.distanceMeter.achievement = false;
-
     this.tRex.update(100, Trex.status.CRASHED);
 
     // Game over panel.
@@ -1418,7 +1417,7 @@ function drawCollisionBoxes(canvasCtx, tRexBox, obstacleBox) {
   canvasCtx.save();
   canvasCtx.strokeStyle = '#f00';
   canvasCtx.strokeRect(tRexBox.x, tRexBox.y, tRexBox.width, tRexBox.height);
-
+  // console.log(JSON.stringify(tRexBox))
   canvasCtx.strokeStyle = '#0f0';
   canvasCtx.strokeRect(obstacleBox.x, obstacleBox.y,
       obstacleBox.width, obstacleBox.height);
@@ -1872,7 +1871,6 @@ Trex.prototype = {
         Runner.config.BOTTOM_PAD;
     this.yPos = this.groundYPos;
     this.minJumpHeight = this.groundYPos - this.config.MIN_JUMP_HEIGHT;
-
     this.draw(0, 0);
     this.update(0, Trex.status.WAITING);
   },

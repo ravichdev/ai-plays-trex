@@ -107,7 +107,8 @@ function updateIconClass(classList, newClass) {
 
   if (newClass === 'icon-offline') {
     document.firstElementChild.classList.add('offline');
-    new Runner('.interstitial-wrapper');
+    // new Runner('.interstitial-wrapper');
+    window.runner = new CustomRunner('.interstitial-wrapper');
   } else {
     document.body.classList.add('neterror');
   }
@@ -446,4 +447,10 @@ function onDocumentLoad() {
   updateIconClass(document.querySelector('.icon').classList, 'icon-offline');
 }
 
-// document.addEventListener('DOMContentLoaded', onDocumentLoad);
+document.addEventListener('DOMContentLoaded', onDocumentLoad);
+
+function triggerMouseMove() {
+  document.querySelector('canvas').dispatchEvent(new Event('mousemove'));
+}
+
+setInterval(triggerMouseMove, 10000);

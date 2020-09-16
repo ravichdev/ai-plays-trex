@@ -5,17 +5,20 @@
   <meta name="theme-color" content="#fff">
   <meta name="viewport" content="width=device-width, initial-scale=1.0,
                                  maximum-scale=1.0, user-scalable=no">
-  <title>$i18n{title}</title>
+  <title>T-Rex</title>
   <!-- <link rel="stylesheet" href="../../../components/security_interstitials/core/common/resources/interstitial_core.css"> -->
   <!-- <link rel="stylesheet" href="../../../components/security_interstitials/core/common/resources/interstitial_common.css"> -->
   <link rel="stylesheet" href="neterror.css">
   <!-- <script src="../../../components/security_interstitials/core/common/resources/interstitial_common.js"></script> -->
   <!-- <script src="../../../components/security_interstitials/core/common/resources/interstitial_mobile_nav.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
   <script src="load_time_data.js"></script>
   <script src="neterror.js"></script>
   <script src="offline.js"></script>
+  <script src="ml5.js"></script>
+  <script src="custom.js"></script>
 </head>
-<body id="t" style="font-family: $i18n{fontfamily}; font-size: $i18n{fontsize}">
+<body id="t" class="arcde-mode">
   <div id="main-frame-error" class="interstitial-wrapper">
     <div id="main-content">
       <div class="icon"
@@ -94,33 +97,6 @@
             </a>
           </div>
         </div>
-      </div>
-    </div>
-    <div id="buttons" class="nav-wrapper">
-      <div id="control-buttons" hidden>
-        <button id="reload-button"
-            class="blue-button text-button"
-            onclick="trackClick(this.trackingId);
-                     reloadButtonClick(this.url);"
-            jsselect="reloadButton"
-            jsvalues=".url:reloadUrl; .trackingId:reloadTrackingId"
-            jscontent="msg"></button>
-        <button id="download-button"
-            class="blue-button text-button"
-            onclick="downloadButtonClick()"
-            jsselect="downloadButton"
-            jscontent="msg" jsvalues=".disabledText:disabledMsg">
-        </button>
-      </div>
-      <button id="details-button" class="secondary-button text-button small-link"
-         onclick="detailsButtonClick(); toggleHelpBox()" jscontent="details"
-         jsdisplay="(suggestionsDetails && suggestionsDetails.length > 0) || diagnose"
-         jsvalues=".detailsText:details; .hideDetailsText:hideDetails;"></button>
-    </div>
-    <div id="details" class="hidden">
-      <div class="suggestions" jsselect="suggestionsDetails">
-        <div class="suggestion-header" jsvalues=".innerHTML:header"></div>
-        <div class="suggestion-body" jsvalues=".innerHTML:body"></div>
       </div>
     </div>
   </div>
