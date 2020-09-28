@@ -7,10 +7,40 @@ class CustomRunner extends Runner {
     super.init();
     this.tRex = new TrexWrap(this.canvas, this.spriteDef.TREX);
     window.map = p5.prototype.map;
+
+    const windowHeight = window.innerHeight;
+    const scaleHeight = windowHeight / this.dimensions.HEIGHT;
+    const scaleWidth = window.innerWidth / this.dimensions.WIDTH;
+    const scale = Math.max(1, Math.min(scaleHeight, scaleWidth));
+    const scaledCanvasHeight = this.dimensions.HEIGHT * scale;
+    // Positions the game container at 10% of the available vertical window
+    // height minus the game container height.
+    const translateY = Math.ceil(Math.max(0, (windowHeight - scaledCanvasHeight -
+        Runner.config.ARCADE_MODE_INITIAL_TOP_POSITION) *
+        Runner.config.ARCADE_MODE_TOP_POSITION_PERCENT)) *
+        window.devicePixelRatio;
+    this.containerEl.style.transform = 'scale(' + scale + ') translateY(' +
+        translateY + 'px)';
   }
 
   isArcadeMode() {
     return true;
+  }
+
+  setArcadeModeContainerScale() {
+    return false;
+  }
+
+  playIntro() {
+    if (!this.activated && !this.crashed) {
+      this.playingIntro = true;
+      this.tRex.playingIntro = true;
+      this.setPlayStatus(true);
+      this.activated = true;
+      this.startGame();
+    } else if (this.crashed) {
+      this.restart();
+    }
   }
 
   update() {
