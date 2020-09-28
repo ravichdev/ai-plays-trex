@@ -1,3 +1,4 @@
+
 class TrexPlayer extends Trex {
 	constructor(canvas, spritePos, brain) {
 		super(canvas, spritePos);
@@ -20,23 +21,17 @@ class TrexPlayer extends Trex {
 		}
 	}
 
-	// Mutate the brain
-	mutate() {
-		// 10% mutation rate
-		this.brain.mutate(0.1);
-	}
+	act(data, currentSpeed) {
+    const results = this.brain.classifySync(data);
 
-	act(obstacle, currentSpeed) {
-		const results = this.brain.classifySync(obstacle);
-
-		if(['jump', 'duck'].includes(results[0].label)) {
-			return results[0].label;
-		}
-
-		return '';
-	}
-
-	out(score) {
-		this.score = score;
+    if(!this.jumping && !this.ducking && results[0].label === 'jump') {
+      this.startJump(currentSpeed);
+    }else if(results[0].label === 'duck') {
+      if (this.jumping) {
+        this.setSpeedDrop();
+      } else if (!this.jumping && !this.ducking) {
+        this.setDuck(true);
+      }
+    }
 	}
 }

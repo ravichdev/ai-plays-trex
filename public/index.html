@@ -10,11 +10,20 @@
 
   <script>
     loadTimeData = null;
+    document.addEventListener('DOMContentLoaded', function() {
+      window.runner = new CustomRunner('#runner');
+    });
   </script>
+
   <script src="neterror/offline.js"></script>
+
   <script src="/scripts/p5/lib/p5.min.js"></script>
   <script src="ml5.js"></script>
-  <script src="custom.js"></script>
+
+  <script src="src/trex-wrap.js"></script>
+  <script src="src/trex-player.js"></script>
+  <script src="src/custom-runner.js"></script>
+  <script src="src/genetic-algorithm.js"></script>
 </head>
 <body id="t" class="arcade-mode">
   <div id="runner">
