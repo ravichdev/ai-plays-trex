@@ -133,17 +133,6 @@ class CustomRunner extends Runner {
             tRex.config.WIDTH - 2,
             tRex.config.HEIGHT - 2);
 
-          // const input = [
-          //   tRexBox.x,
-          //   tRexBox.x + tRexBox.width,
-          //   tRexBox.y,
-          //   tRexBox.y - tRexBox.height,
-          //   obstacleBox.x,
-          //   obstacleBox.x + obstacleBox.width,
-          //   obstacleBox.y,
-          //   obstacleBox.y - obstacleBox.height,
-          // ];
-
           let tRexYPos = runner.dimensions.HEIGHT - tRexBox.y - tRexBox.height;
           let obstacleYPos = runner.dimensions.HEIGHT - obstacleBox.y - obstacleBox.height;
 
@@ -161,33 +150,6 @@ class CustomRunner extends Runner {
             map(obstacleYPos + obstacleBox.height, 0, runner.dimensions.HEIGHT, 0, 1),
             map(this.currentSpeed, 5, 100, 0, 1)
           ];
-
-          // if(tRexs.length === 1)
-          //   console.log(JSON.stringify(input));
-          // if(this.horizon.obstacles[1]) {
-          //   const obstacle = this.horizon.obstacles[1];
-          //   obstacleBox = new CollisionBox(
-          //     obstacle.xPos + 1,
-          //     obstacle.yPos + 1,
-          //     obstacle.typeConfig.width * obstacle.size - 2,
-          //     obstacle.typeConfig.height - 2);
-
-          //   input.push(obstacleBox.x);
-          //   input.push(obstacleBox.x + obstacleBox.width);
-          //   input.push(obstacleBox.y);
-          //   input.push(obstacleBox.y - obstacleBox.height);
-          // } else {
-          //   input.push(0);
-          //   input.push(0);
-          //   input.push(0);
-          //   input.push(0);
-          // }
-
-          // normalize
-          // input[0] = input[0] / (this.dimensions.WIDTH * 1.05);
-          // input[1] = input[1] / (this.dimensions.HEIGHT * 1.05);
-          // input[2] = input[2] / (45 * Obstacle.MAX_OBSTACLE_LENGTH) // 45 is max-width of an obstacle
-          // input[3] = input[3] / 50 // 50 is max-height of an obstacle
 
           tRex.act(input, this.currentSpeed);
         }
@@ -266,7 +228,6 @@ class TrexPlayer extends Trex {
 
 		// Player can be created with an existing neural network
 		if (brain) {
-      // console.log('brain', brain.neuralNetwork.model.layers[0].getWeights()[0].print())
 			this.brain = brain;
 		} else {
 			// Create a new neural network
@@ -299,6 +260,7 @@ class GeneticAlgorithm {
   perGeneration = 20;
   curGeneration = 0;
   lastGeneration = [];
+  crossover = Math.floor(this.perGeneration * 0.3);
 
   constructor(tRexWrap) {
     this.tRexWrap = tRexWrap;
@@ -317,7 +279,7 @@ class GeneticAlgorithm {
 
     this.cleanUp();
     this.curGeneration++;
-    this.lastGeneration = this.lastGeneration.slice(0, 5);
+    this.lastGeneration = this.lastGeneration.slice(0, this.crossover);
 
     return players;
   }
@@ -346,17 +308,14 @@ class GeneticAlgorithm {
         return 0;
       }
 
-      this.lastGeneration.sort( compare );
+      this.lastGeneration.sort(compare);
       console.log('Total; brains ' + this.lastGeneration.length)
     }
   }
 
   cleanUp() {
     if(this.lastGeneration.length) {
-      // for (const player of this.lastGeneration) {
-      //   player.brain.dispose();
-      // }
-      for(let i = 5; i < this.lastGeneration.length; i++) {
+      for(let i = this.crossover; i < this.lastGeneration.length; i++) {
         this.lastGeneration[i].brain.dispose();
       }
     }
@@ -376,10 +335,6 @@ class GeneticAlgorithm {
 
   // Pick one parent probability according to normalized fitness
   pickOne() {
-    // const player = this.lastGeneration[this.lastGeneration.length-1];
-    // console.log(`Player picked with score ${player.score} and fitness ${player.fitness}`)
-    // return player.brain;
-
     let index = 0;
     let r = Math.random(1);
     while (r > 0) {
