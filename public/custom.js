@@ -347,3 +347,7 @@ class GeneticAlgorithm {
     return player.brain;
   }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  window.runner = new CustomRunner('#runner');
+});
