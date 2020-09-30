@@ -8,19 +8,23 @@ class CustomRunner extends Runner {
     this.tRex = new TrexWrap(this.canvas, this.spriteDef.TREX);
     window.map = p5.prototype.map;
 
-    const windowHeight = window.innerHeight;
-    const scaleHeight = windowHeight / this.dimensions.HEIGHT;
-    const scaleWidth = window.innerWidth / this.dimensions.WIDTH;
-    const scale = Math.max(1, Math.min(scaleHeight, scaleWidth));
-    const scaledCanvasHeight = this.dimensions.HEIGHT * scale;
-    // Positions the game container at 10% of the available vertical window
-    // height minus the game container height.
-    const translateY = Math.ceil(Math.max(0, (windowHeight - scaledCanvasHeight -
-        Runner.config.ARCADE_MODE_INITIAL_TOP_POSITION) *
-        Runner.config.ARCADE_MODE_TOP_POSITION_PERCENT)) *
-        window.devicePixelRatio;
-    this.containerEl.style.transform = 'scale(' + scale + ') translateY(' +
-        translateY + 'px)';
+    super.setArcadeModeContainerScale();
+
+    const xPos = this.dimensions.WIDTH - (DistanceMeter.dimensions.DEST_WIDTH *
+      (DistanceMeter.config.MAX_DISTANCE_UNITS + 1));
+
+    this.textDimensions = {
+      sWidth: 14,
+      sHeight: 14,
+      destX: 0,
+      destY: 10,
+      yPos: 15,
+      xPosG: 654,
+      xPosA: 680,
+      xOffset: DistanceMeter.dimensions.WIDTH * 7,
+      xPos: xPos - (DistanceMeter.config.MAX_DISTANCE_UNITS * 5) *
+      DistanceMeter.dimensions.WIDTH,
+    };
   }
 
   isArcadeMode() {
@@ -117,8 +121,6 @@ class CustomRunner extends Runner {
           obstacleYPos = obstacleYPos < 0 ? 0 : obstacleYPos;
 
           const input = [
-            // map(tRexBox.x, 0, runner.dimensions.WIDTH, 0, 1),
-            // map(tRexBox.x + tRexBox.width, 0, runner.dimensions.WIDTH, 0, 1),
             map(tRexYPos, 0, runner.dimensions.HEIGHT, 0, 1),
             map(tRexYPos + tRexBox.height, 0, runner.dimensions.HEIGHT, 0, 1),
             map(obstacleBox.x, 0, runner.dimensions.WIDTH, 0, 1),
@@ -201,6 +203,9 @@ class CustomRunner extends Runner {
           }
         }
       }
+
+      this.drawGen();
+      this.drawAlive();
     }
 
     if (
@@ -212,5 +217,76 @@ class CustomRunner extends Runner {
       this.tRex.update(deltaTime);
       this.scheduleNextUpdate();
     }
+  }
+
+  drawGen() {
+    this.canvasCtx.save();
+
+    this.canvasCtx.translate(this.textDimensions.xPos, 0);
+
+    this.canvasCtx.drawImage(Runner.imageSprite, this.textDimensions.xPosG, this.textDimensions.yPos,
+      this.textDimensions.sWidth, this.textDimensions.sHeight,
+      this.textDimensions.destX, this.textDimensions.destY,
+      this.textDimensions.sWidth, this.textDimensions.sHeight
+    );
+
+    this.canvasCtx.restore();
+
+    this.drawNumber(this.tRex.ga.curGeneration, 20);
+  }
+
+  drawAlive() {
+    this.canvasCtx.save();
+
+    this.canvasCtx.translate(this.textDimensions.xPos + this.textDimensions.xOffset, 0);
+
+    this.canvasCtx.drawImage(Runner.imageSprite, this.textDimensions.xPosA, this.textDimensions.yPos,
+      this.textDimensions.sWidth, this.textDimensions.sHeight,
+      this.textDimensions.destX, this.textDimensions.destY,
+      this.textDimensions.sWidth, this.textDimensions.sHeight
+    );
+
+    this.canvasCtx.restore();
+
+    this.drawNumber(this.tRex.tRexs.length, 20 + this.textDimensions.xOffset);
+  }
+
+  drawNumber(number, startX) {
+    const digits = String(number).split('');
+    for (let i = 0; i < digits.length; i++) {
+      this.drawDigit(i, parseInt(digits[i], 10), startX);
+    }
+  }
+
+  /**
+   * Draw a digit to canvas.
+   * @param {number} digitPos Position of the digit.
+   * @param {number} value Digit value 0-9.
+   */
+  drawDigit(digitPos, value, startX = 0) {
+    let sourceWidth = DistanceMeter.dimensions.WIDTH;
+    let sourceHeight = DistanceMeter.dimensions.HEIGHT;
+    let sourceX = DistanceMeter.dimensions.WIDTH * value;
+    let sourceY = 0;
+
+    const targetX = startX + digitPos * DistanceMeter.dimensions.DEST_WIDTH;
+    const targetY = this.textDimensions.destY;
+    const targetWidth = DistanceMeter.dimensions.WIDTH;
+    const targetHeight = DistanceMeter.dimensions.HEIGHT;
+
+    sourceX += this.spriteDef.TEXT_SPRITE.x;
+    sourceY += this.spriteDef.TEXT_SPRITE.y;
+
+    this.canvasCtx.save();
+
+    this.canvasCtx.translate(this.textDimensions.xPos, 0);
+
+    this.canvasCtx.drawImage(Runner.imageSprite, sourceX, sourceY,
+        sourceWidth, sourceHeight,
+        targetX, targetY,
+        targetWidth, targetHeight
+      );
+
+    this.canvasCtx.restore();
   }
 }

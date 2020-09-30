@@ -15,7 +15,7 @@ class GeneticAlgorithm {
   nextGeneration(xInitialPos = 0) {
     this.calculateFitness();
 
-	console.log(`Creating generation #${this.curGeneration + 1}`);
+	  console.log(`Creating generation #${this.curGeneration + 1}`);
 
     const players = [];
     for (let index = 0; index < this.perGeneration; index++) {
