@@ -16,8 +16,6 @@ class TrexPlayer extends Trex {
       const options = {
         inputs: 7,
         outputs: ["jump", "duck", "na"],
-        task: "classification",
-        noTraining: true,
       };
       this.brain = new NeuralNetwork(options);
     }

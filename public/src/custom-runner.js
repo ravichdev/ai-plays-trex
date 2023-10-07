@@ -170,6 +170,7 @@ class CustomRunner extends Runner {
             this.stop();
             this.raqId = 0;
             this.tRex.generateTrexs(this.tRex.firstTrex.xInitialPos);
+            this.gameOverPanel = { reset: () => {} };
             this.restart();
           }
         }

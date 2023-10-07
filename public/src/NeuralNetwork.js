@@ -1,8 +1,6 @@
 const DEFAULTS = {
     inputs: [],
     outputs: [],
-    task: 'classification',
-    noTraining: false,
 };
 
 class NeuralNetwork {
@@ -12,30 +10,16 @@ class NeuralNetwork {
             ...(options || {}),
         };
 
-        this.data = [];
         this.model = tf.sequential();
 
         this.init();
     }
 
     init() {
-        if (this.options.noTraining === true) {
-            this.createEmptyLayers();
-        }
+        this.createAndCompileModel();
     }
 
-    createEmptyLayers() {
-        const { inputs, outputs } = this.options;
-
-        for (let i = 0; i < outputs.length; i += 1) {
-            const inputSample = new Array(inputs).fill(0);
-            this.addData(inputSample, [outputs[i]]);
-        }
-
-        this.createLayers();
-    }
-
-    createLayers() {
+    createAndCompileModel() {
         const { inputs, outputs, debug } = this.options;
         const inputShape = [Array.isArray( inputs ) ? inputs.length : inputs];
         const outputUnits = Array.isArray( outputs ) ? outputs.length : outputs;
@@ -57,41 +41,6 @@ class NeuralNetwork {
               this.model,
             );
         }
-    }
-
-    addData(xInputs, yInputs) {
-        const inputLabels = this.createLabelsFromArray(xInputs, 'input');
-        const outputLabels = this.createLabelsFromArray(yInputs, 'output');
-
-        const xs = this.formatDataAsObject(xInputs, inputLabels);
-        const ys = this.formatDataAsObject(yInputs, outputLabels);
-
-        this.data.push({xs, ys});
-    }
-
-    createLabelsFromArray(array, prefix) {
-        let labels;
-        if (Array.isArray(array)) {
-          labels = array.map((v, idx) => `${prefix}_${idx}`)
-        }
-        return labels;
-    }
-
-    formatDataAsObject(data, labels) {
-        let result = {};
-        if (Array.isArray(data)) {
-            data.forEach((item, idx) => {
-                const label = labels[idx];
-                result[label] = item;
-            });
-          return result;
-        }
-
-        if (typeof data === 'object') {
-            return data;
-        }
-
-        throw new Error('input provided is not supported or does not match your output label specifications')
     }
 
     classify(input) {
@@ -127,7 +76,6 @@ class NeuralNetwork {
           for (let i = 0; i < weights.length; i += 1) {
             const tensor = weights[i];
             const { shape } = weights[i];
-            // TODO: Evaluate if this should be sync or not
             const values = tensor.dataSync().slice();
             for (let j = 0; j < values.length; j += 1) {
               if (Math.random() < rate) {
@@ -155,7 +103,6 @@ class NeuralNetwork {
                 const tensorA = weightsA[i];
                 const tensorB = weightsB[i];
                 const { shape } = weightsA[i];
-                // TODO: Evaluate if this should be sync or not
                 const valuesA = tensorA.dataSync().slice();
                 const valuesB = tensorB.dataSync().slice();
                 for (let j = 0; j < valuesA.length; j += 1) {
