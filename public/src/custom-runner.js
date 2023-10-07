@@ -1,12 +1,14 @@
 /**
  * Class to handle multiple trex players.
  */
+
+const map = (value, fromLow, fromHigh, toLow, toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow
+
 class CustomRunner extends Runner {
   bestDistance = 0;
   init() {
     super.init();
     this.tRex = new TrexWrap(this.canvas, this.spriteDef.TREX);
-    window.map = p5.prototype.map;
 
     super.setArcadeModeContainerScale();
 
@@ -139,7 +141,7 @@ class CustomRunner extends Runner {
               0,
               1
             ),
-            map(this.currentSpeed, 5, 100, 0, 1),
+            map(this.currentSpeed, 4, 100, 0, 1),
           ];
 
           tRex.act(input, this.currentSpeed);

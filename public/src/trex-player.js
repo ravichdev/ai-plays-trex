@@ -19,12 +19,12 @@ class TrexPlayer extends Trex {
         task: "classification",
         noTraining: true,
       };
-      this.brain = ml5.neuralNetwork(options);
+      this.brain = new NeuralNetwork(options);
     }
   }
 
   act(data, currentSpeed) {
-    const results = this.brain.classifySync(data);
+    const results = this.brain.classify(data);
 
     if (!this.jumping && !this.ducking && results[0].label === "jump") {
       this.startJump(currentSpeed);

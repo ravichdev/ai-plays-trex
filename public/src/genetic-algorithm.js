@@ -91,13 +91,19 @@ class GeneticAlgorithm {
     return player.brain;
   }
 
+  pickBest() {
+    const sorted = this.lastGeneration.sort((a,b) => b.fitness - a.fitness);
+
+    return sorted[0].brain;
+  }
+
   compare(a, b) {
-	if (a.fitness < b.fitness) {
-	  return 1;
-	}
-	if (a.fitness > b.fitness) {
-	  return -1;
-	}
-	return 0;
+    if (a.fitness < b.fitness) {
+      return 1;
+    }
+    if (a.fitness > b.fitness) {
+      return -1;
+    }
+    return 0;
   }
 }
