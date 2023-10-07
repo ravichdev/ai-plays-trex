@@ -1,6 +1,9 @@
 /**
  * Class to wrap all trex instances in a generation.
  */
+
+const HIDDEN_CLASS = 'hidden';
+
 class TrexWrap {
   firstTrex = null;
   tRexs = [];
