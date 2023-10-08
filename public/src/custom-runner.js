@@ -9,6 +9,9 @@ class CustomRunner extends Runner {
   init() {
     super.init();
     this.tRex = new TrexWrap(this.canvas, this.spriteDef.TREX);
+    this.highScores = [];
+    this.averageScores = [];
+    this.chart = document.getElementById('chart').getContext('2d');
 
     super.setArcadeModeContainerScale();
 
@@ -172,6 +175,7 @@ class CustomRunner extends Runner {
             this.tRex.generateTrexs(this.tRex.firstTrex.xInitialPos);
             this.gameOverPanel = { reset: () => {} };
             this.restart();
+            this.drawChart();
           }
         }
       }
@@ -291,5 +295,67 @@ class CustomRunner extends Runner {
       );
 
     this.canvasCtx.restore();
+  }
+
+  drawChart() {
+    console.log(this.highScores);
+    console.log(this.averageScores);
+    if(this.chartObject) {
+      this.chartObject.destroy();
+    }
+    this.chartObject = new Chart(this.chart, {
+      type: 'line',
+      data: {
+        labels: Array(this.highScores.length)
+          .fill(null)
+          .map((x, i) => i + 1),
+        datasets: [
+          {
+            label: 'High Score',
+            data: this.highScores,
+            fill: false,
+            borderColor: 'red',
+            backgroundColor: 'red',
+            borderDash: [3, 1],
+            pointRadius: 1,
+            pointHoverRadius: 3,
+          },
+          {
+            label: 'Average Score',
+            data: this.averageScores,
+            fill: true,
+            borderColor: '#2193EE',
+            backgroundColor: '#2193EE',
+            pointRadius: 0,
+            pointHoverRadius: 0,
+          },
+        ],
+      },
+      options: {
+        events: [], // Bug on chartJS /issues/3753
+        animation: false,
+        responsive: true,
+        tooltips: {
+          mode: 'index',
+          intersect: false,
+        },
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Generation',
+            },
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Score',
+            },
+          },
+        },
+      },
+    });
   }
 }

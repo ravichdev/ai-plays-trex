@@ -47,11 +47,15 @@ class GeneticAlgorithm {
         player.fitness = player.score / sum;
       }
 
+      const average = Math.round(sum / this.lastGeneration.length);
       console.log(
-        `Average score for generation #${this.curGeneration} is ${Math.round(sum / this.lastGeneration.length)}`
+        `Average score for generation #${this.curGeneration} is ${average}`
       );
 
       this.lastGeneration.sort(this.compare);
+
+      window.runner.highScores.push(this.lastGeneration[0].score);
+      window.runner.averageScores.push(average);
     }
   }
 
@@ -92,18 +96,12 @@ class GeneticAlgorithm {
   }
 
   pickBest() {
-    const sorted = this.lastGeneration.sort((a,b) => b.fitness - a.fitness);
+    const sorted = this.lastGeneration.sort(this.compare);
 
     return sorted[0].brain;
   }
 
   compare(a, b) {
-    if (a.fitness < b.fitness) {
-      return 1;
-    }
-    if (a.fitness > b.fitness) {
-      return -1;
-    }
-    return 0;
+    return b.fitness - a.fitness;
   }
 }
