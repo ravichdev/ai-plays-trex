@@ -15,7 +15,8 @@ export default class GeneticAlgorithm {
 
   lastGeneration = [];
 
-  crossover = Math.floor(this.perGeneration * 0.3);
+  // keep 20% of best players between generations
+  crossover = Math.floor(this.perGeneration * 0.2);
 
   constructor(tRexWrap) {
     this.tRexWrap = tRexWrap;
@@ -47,23 +48,23 @@ export default class GeneticAlgorithm {
   calculateFitness() {
     if (this.lastGeneration.length) {
       let sum = 0;
+      const thisGeneration = this.lastGeneration.slice(this.crossover);
 
-      for (const player of this.lastGeneration) {
+      for (const player of thisGeneration) {
         sum += player.score;
       }
 
-      for (const player of this.lastGeneration) {
+      for (const player of thisGeneration) {
         player.fitness = player.score / sum;
       }
 
-      const average = Math.round(sum / this.lastGeneration.length);
+      const average = Math.round(sum / thisGeneration.length);
+      thisGeneration.sort(this.compare);
       console.log(
-        `Average score for generation #${this.curGeneration} is ${average}`,
+        `Average score for generation #${this.curGeneration} is ${average}. High score is ${thisGeneration[0].score}`,
       );
 
-      this.lastGeneration.sort(this.compare);
-
-      window.runner.highScores.push(this.lastGeneration[0].score);
+      window.runner.highScores.push(thisGeneration[0].score);
       window.runner.averageScores.push(average);
     }
   }
@@ -78,10 +79,10 @@ export default class GeneticAlgorithm {
 
   reproduceBrain() {
     if (this.lastGeneration.length) {
-      const brainA = this.pickOne();
-      const brainB = this.pickOne();
+      const brainA = this.pickBest();
+      const brainB = this.pickBest(true);
       const childBrain = brainA.crossover(brainB);
-      childBrain.mutate(0.1);
+      childBrain.mutate(0.05);
 
       return childBrain;
     }
@@ -89,25 +90,16 @@ export default class GeneticAlgorithm {
     return null;
   }
 
-  // Pick one parent probability according to normalized fitness
-  pickOne() {
-    let index = 0;
-    let r = Math.random(1);
-    while (r > 0) {
-      r -= this.lastGeneration[index].fitness;
-      index++;
-    }
-    index--;
-    const player = this.lastGeneration[index];
-    // console.log(
-    //   `Player picked with score ${player.score} and fitness ${player.fitness}`
-    // );
-    return player.brain;
-  }
-
-  pickBest() {
+  pickBest(rand = false) {
     const sorted = this.lastGeneration.sort(this.compare);
 
+    // randomly pick a player ranking between 1 and 5
+    if (rand) {
+      const index = Math.round(Math.random() * (5 - 1) + 1);
+      return sorted[index].brain;
+    }
+
+    // pick the best player
     return sorted[0].brain;
   }
 

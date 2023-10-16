@@ -2,8 +2,8 @@ import * as tf from '@tensorflow/tfjs';
 import * as tfvis from '@tensorflow/tfjs-vis';
 
 const DEFAULTS = {
-  inputs: [],
-  outputs: [],
+  inputs: 7,
+  outputs: ['jump', 'duck', 'na'],
 };
 
 export default class NeuralNetwork {
@@ -67,23 +67,27 @@ export default class NeuralNetwork {
     return formatted[0];
   }
 
-  mutate(rate = 0.1, mutateFunction = null) {
+  /**
+   * Mutate a model with a given rate.
+   * @param {number} rate
+   */
+  mutate(rate = 0.1) {
     tf.tidy(() => {
       const weights = this.model.getWeights();
       const mutatedWeights = [];
+      // iterate through each weight
       for (let i = 0; i < weights.length; i += 1) {
         const tensor = weights[i];
         const { shape } = weights[i];
         const values = tensor.dataSync().slice();
+        // Iterate through the values and randomly update some of them.
         for (let j = 0; j < values.length; j += 1) {
           if (Math.random() < rate) {
-            if (mutateFunction) {
-              values[j] = mutateFunction(values[j]);
-            } else {
-              values[j] = Math.min(Math.max(values[j] + this.randomGaussian(), -1), 1);
-            }
+            // generate a random value using gaussian distribution and limit it between -1 and 1
+            values[j] = Math.min(Math.max(values[j] + this.randomGaussian(), -1), 1);
           }
         }
+        // create a new tensor with the updates weights
         const newTensor = tf.tensor(values, shape);
         mutatedWeights[i] = newTensor;
       }
@@ -97,12 +101,14 @@ export default class NeuralNetwork {
       const weightsA = nnCopy.model.getWeights();
       const weightsB = other.model.getWeights();
       const childWeights = [];
+      // Iterate through the tensors 
       for (let i = 0; i < weightsA.length; i += 1) {
         const tensorA = weightsA[i];
         const tensorB = weightsB[i];
         const { shape } = weightsA[i];
         const valuesA = tensorA.dataSync().slice();
         const valuesB = tensorB.dataSync().slice();
+        // Iterate through the first model weights and randomly set some values from second model
         for (let j = 0; j < valuesA.length; j += 1) {
           if (Math.random() < 0.5) {
             valuesA[j] = valuesB[j];

@@ -10,6 +10,7 @@ export default class TRexPlayer extends Trex {
   constructor(canvas, spritePos, brain) {
     super(canvas, spritePos);
 
+    // track the player's score and fitness
     this.score = 0;
     this.fitness = 0;
 
@@ -18,11 +19,7 @@ export default class TRexPlayer extends Trex {
       this.brain = brain;
     } else {
       // Create a new neural network
-      const options = {
-        inputs: 7,
-        outputs: ['jump', 'duck', 'na'],
-      };
-      this.brain = new NeuralNetwork(options);
+      this.brain = new NeuralNetwork();
     }
   }
 
