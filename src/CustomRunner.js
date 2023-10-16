@@ -239,45 +239,25 @@ export default class CustomRunner extends Runner {
   drawGen() {
     this.canvasCtx.save();
 
-    this.canvasCtx.translate(this.textDimensions.xPos, 0);
-
-    this.canvasCtx.drawImage(
-      Runner.imageSprite,
-      this.textDimensions.xPosG,
-      this.textDimensions.yPos,
-      this.textDimensions.sWidth,
-      this.textDimensions.sHeight,
-      this.textDimensions.destX,
-      this.textDimensions.destY,
-      this.textDimensions.sWidth,
-      this.textDimensions.sHeight,
-    );
+    this.canvasCtx.font = 'bold 12px "Press Start 2P"';
+    this.canvasCtx.fillStyle = '#444';
+    this.canvasCtx.fillText('GENERATION:', this.textDimensions.destX + 70, this.textDimensions.destY + 12);
 
     this.canvasCtx.restore();
 
-    this.drawNumber(this.tRex.ga.curGeneration, 20);
+    this.drawNumber(this.tRex.ga.curGeneration, -80);
   }
 
   drawAlive() {
     this.canvasCtx.save();
 
-    this.canvasCtx.translate(this.textDimensions.xPos + this.textDimensions.xOffset, 0);
-
-    this.canvasCtx.drawImage(
-      Runner.imageSprite,
-      this.textDimensions.xPosA,
-      this.textDimensions.yPos,
-      this.textDimensions.sWidth,
-      this.textDimensions.sHeight,
-      this.textDimensions.destX,
-      this.textDimensions.destY,
-      this.textDimensions.sWidth,
-      this.textDimensions.sHeight,
-    );
+    this.canvasCtx.font = 'bold 12px "Press Start 2P"';
+    this.canvasCtx.fillStyle = '#444';
+    this.canvasCtx.fillText('ALIVE:', this.textDimensions.destX + 240, this.textDimensions.destY + 12);
 
     this.canvasCtx.restore();
 
-    this.drawNumber(this.tRex.tRexs.length, 20 + this.textDimensions.xOffset);
+    this.drawNumber(this.tRex.tRexs.length, this.textDimensions.xOffset - 40);
   }
 
   drawNumber(number, startX) {
