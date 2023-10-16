@@ -8,41 +8,38 @@
   <link rel="stylesheet" href="neterror/neterror.css">
   <link rel="icon" href="data:,">
 
-  <script>
-    loadTimeData = null;
-    document.addEventListener('DOMContentLoaded', function() {
-      window.runner = new CustomRunner('#runner');
-    });
-  </script>
-
   <style>
+    #runner{
+      height: 50vh;
+    }
+
+    .icon-offline,
+    .slow-speed-option {
+      display: none;
+    }
+
     .runner-container {
       position: relative !important;
       top: -10vh !important;
       width: 600px !important;
     }
 
-    .slow-speed-option {
-      display: none;
+    #chart-wrap {
+      height: calc(50vh - 24px);
+      width: 100%;
     }
 
-    #chart-wrap {
-      margin: 5rem auto;
-      max-width: 80%;
+    #chart {
+      display: block;
+      margin: 0 auto;
+      width: 80%;
     }
   </style>
 
   <script src="neterror/offline.js"></script>
   <script src="neterror/offline-sprite-definitions.js"></script>
 
-  <script src="/scripts/@tensorflow/tfjs/dist/tf.js"></script>
-  <script src="/scripts/chart.js/dist/chart.umd.js"></script>
-
-  <script src="src/NeuralNetwork.js"></script>
-  <script src="src/trex-wrap.js"></script>
-  <script src="src/trex-player.js"></script>
-  <script src="src/custom-runner.js"></script>
-  <script src="src/genetic-algorithm.js"></script>
+  <script src="main.js"></script>
 
 </head>
 <body id="t" class="arcade-mode">

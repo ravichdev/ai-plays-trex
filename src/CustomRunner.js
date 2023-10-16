@@ -1,15 +1,25 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-plusplus */
+import Chart from 'chart.js/auto';
+import TRexWrap from './TRexWrap';
+
+// eslint-disable-next-line max-len
+const {
+  Runner, DistanceMeter, getTimeStamp, CollisionBox, Trex, checkForCollision,
+} = window;
+
+// eslint-disable-next-line max-len, no-mixed-operators
+const map = (value, fromLow, fromHigh, toLow, toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
+
 /**
  * Class to handle multiple trex players.
  */
-
-const map = (value, fromLow, fromHigh, toLow, toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
-
-class CustomRunner extends Runner {
+export default class CustomRunner extends Runner {
   bestDistance = 0;
 
   init() {
     super.init();
-    this.tRex = new TrexWrap(this.canvas, this.spriteDef.TREX);
+    this.tRex = new TRexWrap(this.canvas, this.spriteDef.TREX);
     this.highScores = [];
     this.averageScores = [];
     this.chart = document.getElementById('chart').getContext('2d');
@@ -82,6 +92,7 @@ class CustomRunner extends Runner {
       if (this.playingIntro) {
         this.horizon.update(0, this.currentSpeed, hasObstacles);
       } else {
+        // eslint-disable-next-line no-bitwise
         const showNightMode = this.isDarkMode ^ this.inverted;
         deltaTime = !this.activated ? 0 : deltaTime;
         this.horizon.update(
@@ -119,28 +130,28 @@ class CustomRunner extends Runner {
             tRex.config.HEIGHT - 2,
           );
 
-          let tRexYPos = runner.dimensions.HEIGHT - tRexBox.y - tRexBox.height;
-          let obstacleYPos = runner.dimensions.HEIGHT - obstacleBox.y - obstacleBox.height;
+          let tRexYPos = this.dimensions.HEIGHT - tRexBox.y - tRexBox.height;
+          let obstacleYPos = this.dimensions.HEIGHT - obstacleBox.y - obstacleBox.height;
 
           tRexYPos = tRexYPos < 0 ? 0 : tRexYPos;
           obstacleYPos = obstacleYPos < 0 ? 0 : obstacleYPos;
 
           const input = [
-            map(tRexYPos, 0, runner.dimensions.HEIGHT, 0, 1),
-            map(tRexYPos + tRexBox.height, 0, runner.dimensions.HEIGHT, 0, 1),
-            map(obstacleBox.x, 0, runner.dimensions.WIDTH, 0, 1),
+            map(tRexYPos, 0, this.dimensions.HEIGHT, 0, 1),
+            map(tRexYPos + tRexBox.height, 0, this.dimensions.HEIGHT, 0, 1),
+            map(obstacleBox.x, 0, this.dimensions.WIDTH, 0, 1),
             map(
               obstacleBox.x + obstacleBox.width,
               0,
-              runner.dimensions.WIDTH,
+              this.dimensions.WIDTH,
               0,
               1,
             ),
-            map(obstacleYPos, 0, runner.dimensions.HEIGHT, 0, 1),
+            map(obstacleYPos, 0, this.dimensions.HEIGHT, 0, 1),
             map(
               obstacleYPos + obstacleBox.height,
               0,
-              runner.dimensions.HEIGHT,
+              this.dimensions.HEIGHT,
               0,
               1,
             ),
@@ -315,8 +326,6 @@ class CustomRunner extends Runner {
   }
 
   drawChart() {
-    console.log(this.highScores);
-    console.log(this.averageScores);
     if (this.chartObject) {
       this.chartObject.destroy();
     }

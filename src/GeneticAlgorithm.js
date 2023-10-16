@@ -1,8 +1,14 @@
+/* eslint-disable no-console */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-plusplus */
+import TRexPlayer from './TRexPlayer';
+
 /**
  * Class to handle managing generations
  * and creating new players.
  */
-class GeneticAlgorithm {
+export default class GeneticAlgorithm {
   perGeneration = 20;
 
   curGeneration = 0;
@@ -18,11 +24,11 @@ class GeneticAlgorithm {
   nextGeneration(xInitialPos = 0) {
     this.calculateFitness();
 
-	  console.log(`Creating generation #${this.curGeneration + 1}`);
+    console.log(`Creating generation #${this.curGeneration + 1}`);
 
     const players = [];
     for (let index = 0; index < this.perGeneration; index++) {
-      const trex = new TrexPlayer(
+      const trex = new TRexPlayer(
         this.tRexWrap.canvas,
         this.tRexWrap.spritePos,
         this.reproduceBrain(),
@@ -79,6 +85,8 @@ class GeneticAlgorithm {
 
       return childBrain;
     }
+
+    return null;
   }
 
   // Pick one parent probability according to normalized fitness

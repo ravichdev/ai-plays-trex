@@ -2,9 +2,11 @@
  * Class to wrap all trex instances in a generation.
  */
 
-const HIDDEN_CLASS = 'hidden';
+import GeneticAlgorithm from './GeneticAlgorithm';
 
-class TrexWrap {
+const { Trex } = window;
+
+export default class TRexWrap {
   firstTrex = null;
 
   tRexs = [];
@@ -16,6 +18,7 @@ class TrexWrap {
     this.spritePos = spritePos;
     this.ga = new GeneticAlgorithm(this);
     this.generateTrexs();
+    // eslint-disable-next-line prefer-destructuring
     this.firstTrex = this.tRexs[0];
   }
 
@@ -31,7 +34,9 @@ class TrexWrap {
     return this.firstTrex.config;
   }
 
+  // eslint-disable-next-line grouped-accessor-pairs
   set playingIntro(value) {
+    // eslint-disable-next-line no-return-assign, no-param-reassign
     this.tRexs.forEach((tRex) => (tRex.playingIntro = value));
   }
 
@@ -47,7 +52,8 @@ class TrexWrap {
 // If a method in the TrexWrap is triggered, iterate through all
 // the trexs in the generation and invoke the method for each trex.
 Object.keys(Trex.prototype).forEach(
-  (method) => (TrexWrap.prototype[method] = function (...args) {
+  // eslint-disable-next-line no-return-assign, func-names
+  (method) => (TRexWrap.prototype[method] = function (...args) {
     this.tRexs.forEach((tRex) => tRex[method](...args));
   }),
 );

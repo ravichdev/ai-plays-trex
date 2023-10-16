@@ -1,9 +1,12 @@
+import * as tf from '@tensorflow/tfjs';
+import * as tfvis from '@tensorflow/tfjs-vis';
+
 const DEFAULTS = {
   inputs: [],
   outputs: [],
 };
 
-class NeuralNetwork {
+export default class NeuralNetwork {
   constructor(options) {
     this.options = {
       ...DEFAULTS,
@@ -46,6 +49,7 @@ class NeuralNetwork {
   classify(input) {
     const { inputs, outputs } = this.options;
     if (typeof inputs === 'number' && input.length === inputs) {
+      // eslint-disable-next-line no-param-reassign
       input = [input];
     }
 
@@ -63,7 +67,7 @@ class NeuralNetwork {
     return formatted[0];
   }
 
-  mutate(rate = 0.1, mutateFunction) {
+  mutate(rate = 0.1, mutateFunction = null) {
     tf.tidy(() => {
       const weights = this.model.getWeights();
       const mutatedWeights = [];
@@ -127,7 +131,8 @@ class NeuralNetwork {
   }
 
   // Src https://github.com/processing/p5.js/blob/master/src/math/random.js#L168
-  randomGaussian = (mean = 0, sd = 1) => {
+  // eslint-disable-next-line class-methods-use-this
+  randomGaussian(mean = 0, sd = 1) {
     const randomFloat = (min = 0, max = 1) => (Math.random() * (max - min)) + min;
 
     let y1;
@@ -151,7 +156,7 @@ class NeuralNetwork {
       previous = true;
     }
     return (y1 * sd) + mean;
-  };
+  }
 
   /**
      * dispose and release the memory for the model

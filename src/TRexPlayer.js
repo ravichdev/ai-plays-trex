@@ -1,7 +1,12 @@
 /**
  * Class to handle a trex decisions/movements.
  */
-class TrexPlayer extends Trex {
+
+import NeuralNetwork from './NeuralNetwork';
+
+const { Trex } = window;
+
+export default class TRexPlayer extends Trex {
   constructor(canvas, spritePos, brain) {
     super(canvas, spritePos);
 
