@@ -2,10 +2,11 @@
  * Class to handle multiple trex players.
  */
 
-const map = (value, fromLow, fromHigh, toLow, toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow
+const map = (value, fromLow, fromHigh, toLow, toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 
 class CustomRunner extends Runner {
   bestDistance = 0;
+
   init() {
     super.init();
     this.tRex = new TrexWrap(this.canvas, this.spriteDef.TREX);
@@ -15,8 +16,8 @@ class CustomRunner extends Runner {
 
     super.setArcadeModeContainerScale();
 
-    const xPos = this.dimensions.WIDTH - (DistanceMeter.dimensions.DEST_WIDTH *
-      (DistanceMeter.config.MAX_DISTANCE_UNITS + 1));
+    const xPos = this.dimensions.WIDTH - (DistanceMeter.dimensions.DEST_WIDTH
+      * (DistanceMeter.config.MAX_DISTANCE_UNITS + 1));
 
     this.textDimensions = {
       sWidth: 14,
@@ -27,8 +28,8 @@ class CustomRunner extends Runner {
       xPosG: 654,
       xPosA: 680,
       xOffset: DistanceMeter.dimensions.WIDTH * 7,
-      xPos: xPos - (DistanceMeter.config.MAX_DISTANCE_UNITS * 5) *
-      DistanceMeter.dimensions.WIDTH,
+      xPos: xPos - (DistanceMeter.config.MAX_DISTANCE_UNITS * 5)
+      * DistanceMeter.dimensions.WIDTH,
     };
   }
 
@@ -87,7 +88,7 @@ class CustomRunner extends Runner {
           deltaTime,
           this.currentSpeed,
           hasObstacles,
-          showNightMode
+          showNightMode,
         );
       }
 
@@ -97,30 +98,29 @@ class CustomRunner extends Runner {
         this.currentSpeed += this.config.ACCELERATION;
       }
 
-      const tRexs = this.tRex.tRexs;
+      const { tRexs } = this.tRex;
       for (let index = 0; index < tRexs.length; index++) {
         let tRex = tRexs[index];
 
-        let obstacle = this.horizon.obstacles[0];
+        const obstacle = this.horizon.obstacles[0];
 
         if (obstacle) {
-          let obstacleBox = new CollisionBox(
+          const obstacleBox = new CollisionBox(
             obstacle.xPos + 1,
             obstacle.yPos + 1,
             obstacle.typeConfig.width * obstacle.size - 2,
-            obstacle.typeConfig.height - 2
+            obstacle.typeConfig.height - 2,
           );
 
           const tRexBox = new CollisionBox(
             tRex.xPos + 1,
             tRex.yPos + 1,
             tRex.config.WIDTH - 2,
-            tRex.config.HEIGHT - 2
+            tRex.config.HEIGHT - 2,
           );
 
           let tRexYPos = runner.dimensions.HEIGHT - tRexBox.y - tRexBox.height;
-          let obstacleYPos =
-            runner.dimensions.HEIGHT - obstacleBox.y - obstacleBox.height;
+          let obstacleYPos = runner.dimensions.HEIGHT - obstacleBox.y - obstacleBox.height;
 
           tRexYPos = tRexYPos < 0 ? 0 : tRexYPos;
           obstacleYPos = obstacleYPos < 0 ? 0 : obstacleYPos;
@@ -134,7 +134,7 @@ class CustomRunner extends Runner {
               0,
               runner.dimensions.WIDTH,
               0,
-              1
+              1,
             ),
             map(obstacleYPos, 0, runner.dimensions.HEIGHT, 0, 1),
             map(
@@ -142,7 +142,7 @@ class CustomRunner extends Runner {
               0,
               runner.dimensions.HEIGHT,
               0,
-              1
+              1,
             ),
             map(this.currentSpeed, 4, 100, 0, 1),
           ];
@@ -150,8 +150,7 @@ class CustomRunner extends Runner {
           tRex.act(input, this.currentSpeed);
         }
 
-        const collision =
-          hasObstacles && checkForCollision(this.horizon.obstacles[0], tRex);
+        const collision = hasObstacles && checkForCollision(this.horizon.obstacles[0], tRex);
 
         if (collision) {
           tRex.update(100, Trex.status.CRASHED);
@@ -159,7 +158,7 @@ class CustomRunner extends Runner {
           index--;
 
           const distance = this.distanceMeter.getActualDistance(
-            this.distanceRan
+            this.distanceRan,
           );
           tRex.score = distance;
           this.tRex.ga.lastGeneration.push(tRex);
@@ -182,7 +181,7 @@ class CustomRunner extends Runner {
 
       const playAchievementSound = this.distanceMeter.update(
         deltaTime,
-        Math.ceil(this.distanceRan)
+        Math.ceil(this.distanceRan),
       );
 
       if (playAchievementSound) {
@@ -198,7 +197,7 @@ class CustomRunner extends Runner {
         this.invertTimer += deltaTime;
       } else {
         const actualDistance = this.distanceMeter.getActualDistance(
-          Math.ceil(this.distanceRan)
+          Math.ceil(this.distanceRan),
         );
 
         if (actualDistance > 0) {
@@ -216,10 +215,10 @@ class CustomRunner extends Runner {
     }
 
     if (
-      this.playing ||
-      (!this.activated &&
-        this.tRex.tRexs &&
-        this.tRex.firstTrex.blinkCount < Runner.config.MAX_BLINK_COUNT)
+      this.playing
+      || (!this.activated
+        && this.tRex.tRexs
+        && this.tRex.firstTrex.blinkCount < Runner.config.MAX_BLINK_COUNT)
     ) {
       this.tRex.update(deltaTime);
       this.scheduleNextUpdate();
@@ -231,10 +230,16 @@ class CustomRunner extends Runner {
 
     this.canvasCtx.translate(this.textDimensions.xPos, 0);
 
-    this.canvasCtx.drawImage(Runner.imageSprite, this.textDimensions.xPosG, this.textDimensions.yPos,
-      this.textDimensions.sWidth, this.textDimensions.sHeight,
-      this.textDimensions.destX, this.textDimensions.destY,
-      this.textDimensions.sWidth, this.textDimensions.sHeight
+    this.canvasCtx.drawImage(
+      Runner.imageSprite,
+      this.textDimensions.xPosG,
+      this.textDimensions.yPos,
+      this.textDimensions.sWidth,
+      this.textDimensions.sHeight,
+      this.textDimensions.destX,
+      this.textDimensions.destY,
+      this.textDimensions.sWidth,
+      this.textDimensions.sHeight,
     );
 
     this.canvasCtx.restore();
@@ -247,10 +252,16 @@ class CustomRunner extends Runner {
 
     this.canvasCtx.translate(this.textDimensions.xPos + this.textDimensions.xOffset, 0);
 
-    this.canvasCtx.drawImage(Runner.imageSprite, this.textDimensions.xPosA, this.textDimensions.yPos,
-      this.textDimensions.sWidth, this.textDimensions.sHeight,
-      this.textDimensions.destX, this.textDimensions.destY,
-      this.textDimensions.sWidth, this.textDimensions.sHeight
+    this.canvasCtx.drawImage(
+      Runner.imageSprite,
+      this.textDimensions.xPosA,
+      this.textDimensions.yPos,
+      this.textDimensions.sWidth,
+      this.textDimensions.sHeight,
+      this.textDimensions.destX,
+      this.textDimensions.destY,
+      this.textDimensions.sWidth,
+      this.textDimensions.sHeight,
     );
 
     this.canvasCtx.restore();
@@ -271,8 +282,8 @@ class CustomRunner extends Runner {
    * @param {number} value Digit value 0-9.
    */
   drawDigit(digitPos, value, startX = 0) {
-    let sourceWidth = DistanceMeter.dimensions.WIDTH;
-    let sourceHeight = DistanceMeter.dimensions.HEIGHT;
+    const sourceWidth = DistanceMeter.dimensions.WIDTH;
+    const sourceHeight = DistanceMeter.dimensions.HEIGHT;
     let sourceX = DistanceMeter.dimensions.WIDTH * value;
     let sourceY = 0;
 
@@ -288,11 +299,17 @@ class CustomRunner extends Runner {
 
     this.canvasCtx.translate(this.textDimensions.xPos, 0);
 
-    this.canvasCtx.drawImage(Runner.imageSprite, sourceX, sourceY,
-        sourceWidth, sourceHeight,
-        targetX, targetY,
-        targetWidth, targetHeight
-      );
+    this.canvasCtx.drawImage(
+      Runner.imageSprite,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      targetX,
+      targetY,
+      targetWidth,
+      targetHeight,
+    );
 
     this.canvasCtx.restore();
   }
@@ -300,7 +317,7 @@ class CustomRunner extends Runner {
   drawChart() {
     console.log(this.highScores);
     console.log(this.averageScores);
-    if(this.chartObject) {
+    if (this.chartObject) {
       this.chartObject.destroy();
     }
     this.chartObject = new Chart(this.chart, {

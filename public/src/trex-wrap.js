@@ -6,7 +6,9 @@ const HIDDEN_CLASS = 'hidden';
 
 class TrexWrap {
   firstTrex = null;
+
   tRexs = [];
+
   crashedTrexs = [];
 
   constructor(canvas, spritePos) {
@@ -45,8 +47,7 @@ class TrexWrap {
 // If a method in the TrexWrap is triggered, iterate through all
 // the trexs in the generation and invoke the method for each trex.
 Object.keys(Trex.prototype).forEach(
-  (method) =>
-    (TrexWrap.prototype[method] = function (...args) {
-      this.tRexs.forEach((tRex) => tRex[method](...args));
-    })
+  (method) => (TrexWrap.prototype[method] = function (...args) {
+    this.tRexs.forEach((tRex) => tRex[method](...args));
+  }),
 );

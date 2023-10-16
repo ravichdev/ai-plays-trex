@@ -4,8 +4,11 @@
  */
 class GeneticAlgorithm {
   perGeneration = 20;
+
   curGeneration = 0;
+
   lastGeneration = [];
+
   crossover = Math.floor(this.perGeneration * 0.3);
 
   constructor(tRexWrap) {
@@ -22,7 +25,7 @@ class GeneticAlgorithm {
       const trex = new TrexPlayer(
         this.tRexWrap.canvas,
         this.tRexWrap.spritePos,
-        this.reproduceBrain()
+        this.reproduceBrain(),
       );
       trex.xInitialPos = xInitialPos;
       players.push(trex);
@@ -49,7 +52,7 @@ class GeneticAlgorithm {
 
       const average = Math.round(sum / this.lastGeneration.length);
       console.log(
-        `Average score for generation #${this.curGeneration} is ${average}`
+        `Average score for generation #${this.curGeneration} is ${average}`,
       );
 
       this.lastGeneration.sort(this.compare);
@@ -76,7 +79,6 @@ class GeneticAlgorithm {
 
       return childBrain;
     }
-    return;
   }
 
   // Pick one parent probability according to normalized fitness

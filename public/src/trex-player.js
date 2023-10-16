@@ -15,7 +15,7 @@ class TrexPlayer extends Trex {
       // Create a new neural network
       const options = {
         inputs: 7,
-        outputs: ["jump", "duck", "na"],
+        outputs: ['jump', 'duck', 'na'],
       };
       this.brain = new NeuralNetwork(options);
     }
@@ -24,9 +24,9 @@ class TrexPlayer extends Trex {
   act(data, currentSpeed) {
     const results = this.brain.classify(data);
 
-    if (!this.jumping && !this.ducking && results[0].label === "jump") {
+    if (!this.jumping && !this.ducking && results[0].label === 'jump') {
       this.startJump(currentSpeed);
-    } else if (results[0].label === "duck") {
+    } else if (results[0].label === 'duck') {
       if (this.jumping) {
         this.setSpeedDrop();
       } else if (!this.jumping && !this.ducking) {
