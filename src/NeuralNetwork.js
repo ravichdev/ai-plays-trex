@@ -159,8 +159,8 @@ export default class NeuralNetwork {
   }
 
   /**
-     * dispose and release the memory for the model
-     */
+   * dispose and release the memory for the model
+   */
   dispose() {
     this.model.dispose();
   }
