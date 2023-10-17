@@ -26,10 +26,18 @@ export default class NeuralNetwork {
     const outputUnits = Array.isArray(outputs) ? outputs.length : outputs;
 
     // Create the model
+    this.model = tf.sequential();
 
     // Define the model layers
+    this.model.add(tf.layers.dense({ inputShape, units: 16, activation: 'relu' }));
+    this.model.add(tf.layers.dense({ units: outputUnits, activation: 'softmax' }));
 
     // compile the model
+    this.model.compile({
+      loss: 'categoricalCrossentropy',
+      optimizer: tf.train.sgd(0.1),
+      metrics: ['accuracy'],
+    });
 
     // Display model summary in debug mode
     if (debug) {
@@ -56,15 +64,33 @@ export default class NeuralNetwork {
     }
 
     // create a tensor with the input data
+    const formattedInput = tf.tensor(input);
 
     // invoke the model's predict method with the input
+    const output = tf.tidy(() => this.model.predict(formattedInput));
 
-    // Convert the output as array and sipose the tf object
+    // Convert the output as array and dispose the tf object
+    const result = output.arraySync();
+    output.dispose();
 
     // Sort the predictions by highest to lowest confidence and label them
+    const formatted = result.map((unformatted) => outputs.map((item, idx) => ({
+      label: item,
+      confidence: unformatted[idx],
+    })).sort((a, b) => b.confidence - a.confidence));
 
     // return the result
+    return formatted[0];
   }
+
+  /**
+   * mutate, crossover and copy functions are sourced from ml5.js
+   * which is an excellent library that abstracts creating models from scratch.
+   *
+   * see:
+   * https://github.com/ml5js/ml5-library/blob/main/src/NeuralNetwork/NeuralNetwork.js#L280
+   * https://github.com/ml5js/ml5-library/tree/main
+   */
 
   /**
    * Mutate a model with a given rate.

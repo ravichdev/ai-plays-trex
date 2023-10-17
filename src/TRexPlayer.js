@@ -23,15 +23,24 @@ export default class TRexPlayer extends Trex {
     }
   }
 
+  /**
+   * Take an action based on the input data and the result from the model's prediction
+   * this method is invoked for every frame update in the canvas element
+   */
   act(data, currentSpeed) {
+    // Make a prediction from the nn and get the results
     const results = this.brain.classify(data);
 
     if (!this.jumping && !this.ducking && results[0].label === 'jump') {
+      // if the prediction is to jump, ensure we are not already jumping or ducking
       this.startJump(currentSpeed);
     } else if (results[0].label === 'duck') {
+      // if the prediction is to duck
       if (this.jumping) {
+        // if we are already jumping, try to drop
         this.setSpeedDrop();
       } else if (!this.jumping && !this.ducking) {
+        // duck!
         this.setDuck(true);
       }
     }
