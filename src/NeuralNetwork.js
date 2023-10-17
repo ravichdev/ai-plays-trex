@@ -20,20 +20,18 @@ export default class NeuralNetwork {
    * Create and compile the neural network model.
    */
   createAndCompileModel() {
+    // Read the inputs, outputs and reshape them
     const { inputs, outputs, debug } = this.options;
     const inputShape = [Array.isArray(inputs) ? inputs.length : inputs];
     const outputUnits = Array.isArray(outputs) ? outputs.length : outputs;
 
-    this.model = tf.sequential();
-    this.model.add(tf.layers.dense({ inputShape, units: 16, activation: 'relu' }));
-    this.model.add(tf.layers.dense({ units: outputUnits, activation: 'softmax' }));
+    // Create the model
 
-    this.model.compile({
-      loss: 'categoricalCrossentropy',
-      optimizer: tf.train.sgd(0.1),
-      metrics: ['accuracy'],
-    });
+    // Define the model layers
 
+    // compile the model
+
+    // Display model summary in debug mode
     if (debug) {
       tfvis.show.modelSummary(
         {
@@ -57,18 +55,15 @@ export default class NeuralNetwork {
       input = [input];
     }
 
-    const formattedInput = tf.tensor(input);
-    const output = tf.tidy(() => this.model.predict(formattedInput));
-    const result = output.arraySync();
+    // create a tensor with the input data
 
-    output.dispose();
+    // invoke the model's predict method with the input
 
-    const formatted = result.map((unformatted) => outputs.map((item, idx) => ({
-      label: item,
-      confidence: unformatted[idx],
-    })).sort((a, b) => b.confidence - a.confidence));
+    // Convert the output as array and sipose the tf object
 
-    return formatted[0];
+    // Sort the predictions by highest to lowest confidence and label them
+
+    // return the result
   }
 
   /**

@@ -34,19 +34,14 @@ export default class GeneticAlgorithm {
     console.log(`Creating generation #${this.curGeneration + 1}`);
 
     const players = [];
-    for (let index = 0; index < this.perGeneration; index++) {
-      const trex = new TRexPlayer(
-        this.tRexWrap.canvas,
-        this.tRexWrap.spritePos,
-        this.reproduceBrain(),
-      );
-      trex.xInitialPos = xInitialPos;
-      players.push(trex);
-    }
+    // generate new players
 
+    // cleanup used resources
     this.cleanUp();
     this.curGeneration++;
-    this.lastGeneration = this.lastGeneration.slice(0, this.crossover);
+
+    // keep the best performing players across generations, limit them to the crossover limit
+    this.lastGeneration = [];
 
     return players;
   }
@@ -56,25 +51,14 @@ export default class GeneticAlgorithm {
    */
   calculateFitness() {
     if (this.lastGeneration.length) {
-      let sum = 0;
-      const thisGeneration = this.lastGeneration.slice(this.crossover);
+      // calculate player fitness
 
-      for (const player of thisGeneration) {
-        sum += player.score;
-      }
+      // sort the players in desc order based on their fitness
 
-      for (const player of thisGeneration) {
-        player.fitness = player.score / sum;
-      }
+      // calculate average score
 
-      const average = Math.round(sum / thisGeneration.length);
-      thisGeneration.sort(this.compare);
-      console.log(
-        `Average score for generation #${this.curGeneration} is ${average}. High score is ${thisGeneration[0].score}`,
-      );
+      // Set high and average scores for charting
 
-      window.runner.highScores.push(thisGeneration[0].score);
-      window.runner.averageScores.push(average);
     }
   }
 
@@ -95,12 +79,15 @@ export default class GeneticAlgorithm {
    */
   reproduceBrain() {
     if (this.lastGeneration.length) {
-      const brainA = this.pickBest();
-      const brainB = this.pickBest(true);
-      const childBrain = brainA.crossover(brainB);
-      childBrain.mutate(0.1);
+      // pick the best brain across generations
 
-      return childBrain;
+      // pick a random best player from top 5 players
+
+      // create a child brain by crossover between best and the random best players
+
+      // mutate the brain
+
+      // return the brain
     }
 
     return null;
@@ -111,16 +98,11 @@ export default class GeneticAlgorithm {
    * pick a brain from the top 5 best brains.
    */
   pickBest(rand = false) {
-    const sorted = this.lastGeneration.sort(this.compare);
-
     // randomly pick a player ranking between 1 and 5
     if (rand) {
-      const index = Math.round(Math.random() * (5 - 1) + 1);
-      return sorted[index].brain;
     }
 
     // pick the best player
-    return sorted[0].brain;
   }
 
   /**
