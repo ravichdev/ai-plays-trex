@@ -9,10 +9,13 @@ import TRexPlayer from './TRexPlayer';
  * and creating new players.
  */
 export default class GeneticAlgorithm {
+  // Set the nn models/players per generation
   perGeneration = 20;
 
+  // Track the generation count
   curGeneration = 0;
 
+  // Track all players from last generation
   lastGeneration = [];
 
   // keep 20% of best players between generations
@@ -22,6 +25,9 @@ export default class GeneticAlgorithm {
     this.tRexWrap = tRexWrap;
   }
 
+  /**
+   * Create a next generation of players
+   */
   nextGeneration(xInitialPos = 0) {
     this.calculateFitness();
 
@@ -45,6 +51,9 @@ export default class GeneticAlgorithm {
     return players;
   }
 
+  /**
+   * Calculate fitness of each player in the generation
+   */
   calculateFitness() {
     if (this.lastGeneration.length) {
       let sum = 0;
@@ -69,6 +78,9 @@ export default class GeneticAlgorithm {
     }
   }
 
+  /**
+   * Cleanup all resources used by the last generation
+   */
   cleanUp() {
     if (this.lastGeneration.length) {
       for (let i = this.crossover; i < this.lastGeneration.length; i++) {
@@ -77,12 +89,16 @@ export default class GeneticAlgorithm {
     }
   }
 
+  /**
+   * Reproduce a brain by crossover of the best player and a random player
+   * from the top 5, then mutate the brain
+   */
   reproduceBrain() {
     if (this.lastGeneration.length) {
       const brainA = this.pickBest();
       const brainB = this.pickBest(true);
       const childBrain = brainA.crossover(brainB);
-      childBrain.mutate(0.05);
+      childBrain.mutate(0.1);
 
       return childBrain;
     }
@@ -90,6 +106,10 @@ export default class GeneticAlgorithm {
     return null;
   }
 
+  /**
+   * Pick the best brain so far or
+   * pick a brain from the top 5 best brains.
+   */
   pickBest(rand = false) {
     const sorted = this.lastGeneration.sort(this.compare);
 
@@ -103,6 +123,9 @@ export default class GeneticAlgorithm {
     return sorted[0].brain;
   }
 
+  /**
+   * Compare the model performance using it's fitness
+   */
   compare(a, b) {
     return b.fitness - a.fitness;
   }

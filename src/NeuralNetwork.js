@@ -13,20 +13,18 @@ export default class NeuralNetwork {
       ...(options || {}),
     };
 
-    this.model = tf.sequential();
-
-    this.init();
-  }
-
-  init() {
     this.createAndCompileModel();
   }
 
+  /**
+   * Create and compile the neural network model.
+   */
   createAndCompileModel() {
     const { inputs, outputs, debug } = this.options;
     const inputShape = [Array.isArray(inputs) ? inputs.length : inputs];
     const outputUnits = Array.isArray(outputs) ? outputs.length : outputs;
 
+    this.model = tf.sequential();
     this.model.add(tf.layers.dense({ inputShape, units: 16, activation: 'relu' }));
     this.model.add(tf.layers.dense({ units: outputUnits, activation: 'softmax' }));
 
@@ -46,8 +44,14 @@ export default class NeuralNetwork {
     }
   }
 
+  /**
+   * Classify the input data and return formatted results
+   * sorted by highest to lowest confidence
+   */
   classify(input) {
     const { inputs, outputs } = this.options;
+
+    // Reshape the inputs if required
     if (typeof inputs === 'number' && input.length === inputs) {
       // eslint-disable-next-line no-param-reassign
       input = [input];
@@ -95,13 +99,16 @@ export default class NeuralNetwork {
     });
   }
 
+  /**
+   * Crossover the current nn model with a provided nn model.
+   */
   crossover(other) {
     const nnCopy = this.copy();
     tf.tidy(() => {
       const weightsA = nnCopy.model.getWeights();
       const weightsB = other.model.getWeights();
       const childWeights = [];
-      // Iterate through the tensors 
+      // Iterate through the tensors
       for (let i = 0; i < weightsA.length; i += 1) {
         const tensorA = weightsA[i];
         const tensorB = weightsB[i];
@@ -123,6 +130,9 @@ export default class NeuralNetwork {
     return nnCopy;
   }
 
+  /**
+   * Create a copy of the current nn model
+   */
   copy() {
     const nnCopy = new NeuralNetwork(this.options);
     return tf.tidy(() => {
