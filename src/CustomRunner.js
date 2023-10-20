@@ -51,6 +51,10 @@ export default class CustomRunner extends Runner {
     return false;
   }
 
+  playSound() {
+    // do nothing
+  }
+
   playIntro() {
     if (!this.activated && !this.crashed) {
       this.playingIntro = true;
@@ -241,11 +245,9 @@ export default class CustomRunner extends Runner {
 
     this.canvasCtx.font = 'bold 12px "Press Start 2P"';
     this.canvasCtx.fillStyle = '#444';
-    this.canvasCtx.fillText('GENERATION:', this.textDimensions.destX + 70, this.textDimensions.destY + 12);
+    this.canvasCtx.fillText(`GENERATION:${this.tRex.ga.curGeneration}`, this.textDimensions.destX + 70, this.textDimensions.destY + 12);
 
     this.canvasCtx.restore();
-
-    this.drawNumber(this.tRex.ga.curGeneration, -80);
   }
 
   drawAlive() {
@@ -253,11 +255,9 @@ export default class CustomRunner extends Runner {
 
     this.canvasCtx.font = 'bold 12px "Press Start 2P"';
     this.canvasCtx.fillStyle = '#444';
-    this.canvasCtx.fillText('ALIVE:', this.textDimensions.destX + 240, this.textDimensions.destY + 12);
+    this.canvasCtx.fillText(`ALIVE:${this.tRex.tRexs.length}`, this.textDimensions.destX + 250, this.textDimensions.destY + 12);
 
     this.canvasCtx.restore();
-
-    this.drawNumber(this.tRex.tRexs.length, this.textDimensions.xOffset - 40);
   }
 
   drawNumber(number, startX) {
