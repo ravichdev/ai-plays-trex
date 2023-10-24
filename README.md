@@ -1,4 +1,6 @@
 # AI Plays Chrome Dino T-Rex game
+Presentation: https://docs.google.com/presentation/d/1_XGedvEnq8MQuwQMkj_gNhlMaLD44MZxvmDMWTcsiTg/edit?usp=sharing
+
 The `getting-started` branch has the foundation for the T-Rex game with additional wrapper classes to allow running multiple T-Rex instances in a single game environment.
 
 This is the starting point to build a neural network model along with a genetic algorithm to complete the AI agent that can play the T-Rex game.
